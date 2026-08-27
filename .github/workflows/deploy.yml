@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: '18'
         cache: 'npm'
@@ -23,10 +23,17 @@ jobs:
     - name: Build
       run: npm run build
       env:
-        WEATHER_API_KEY: ${{ secrets.WEATHER_API_KEY }}
+        WEATHER_API_KEY: b57162c5ebb0429441941c2e7a18245d
+
+    - name: Export static site
+      run: |
+        mkdir -p out
+        cp -r .next/static out/
+        cp public/* out/ 2>/dev/null || true
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./.next/standalone
+        publish_dir: ./out
+        cname: hiop0101.github.io
